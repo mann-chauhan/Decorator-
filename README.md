@@ -1,0 +1,1 @@
+# virtual_room_decorator_sdxl.wsgi
