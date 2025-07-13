@@ -204,3 +204,9 @@ If you encounter any issues:
 ---
 
 **Note**: This application uses the Hugging Face inference API with the SDXL model. The API token is configured in the `.env` file. For production use, consider using a paid API service or hosting your own model.
+
+## Hugging Face API Token
+
+1. Go to your Railway project dashboard.
+2. Add an environment variable named `HF_API_TOKEN` with your Hugging Face token value.
+3. Do NOT commit your .env file with secrets to GitHub.

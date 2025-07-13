@@ -144,3 +144,6 @@ Desktop.ini
 
 # Render
 staticfiles/
+
+# Ignore environment variables
+.env

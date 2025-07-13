@@ -1,0 +1,1 @@
+web: gunicorn virtual_room_decorator_sdxl.wsgi:application 
