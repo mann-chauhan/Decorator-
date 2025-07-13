@@ -1,10 +1,10 @@
 # Virtual Room Decorator SDXL
 
-A Django web application that generates beautiful room designs using AI. Users can input text prompts describing their dream room, and the application will generate realistic room images using the SDXL model via Hugging Face's inference API.
+A Django web application that generates beautiful room designs using AI. Users can input text prompts describing their dream room, and the application will generate realistic room images using the SDXL-Lightning model via Hugging Face's inference API.
 
 ## Features
 
-- 🎨 **AI-Powered Room Generation**: Uses SDXL model for high-quality room designs
+- 🎨 **AI-Powered Room Generation**: Uses SDXL-Lightning model for high-quality room designs
 - 💡 **Example Prompts**: Click-to-use example prompts for inspiration
 - ⚡ **Real-time Generation**: Fast image generation with loading animations
 - 📱 **Responsive Design**: Beautiful, modern UI that works on all devices
@@ -146,7 +146,7 @@ virtual_room_decorator_sdxl/
 
 ## Technologies Used
 
-- **Backend**: Django 4.2.7
+- **Backend**: Django 5.2.4
 - **Frontend**: HTML5, CSS3, JavaScript (Vanilla)
 - **AI Model**: SDXL via Hugging Face Inference API
 - **Deployment**: Render (with Gunicorn)
