@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Virtual Room Decorator</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .main-container {
+            min-height: 100vh;
+            padding: 2rem 0;
+        }
+        .card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.95);
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 10px;
+            padding: 12px 30px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+        .btn-outline-primary {
+            border-color: #667eea;
+            color: #667eea;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        .btn-outline-primary:hover {
+            background-color: #667eea;
+            border-color: #667eea;
+            transform: translateY(-1px);
+        }
+        .form-control {
+            border-radius: 10px;
+            border: 2px solid #e1e5e9;
+            padding: 15px;
+            transition: border-color 0.3s ease;
+        }
+        .form-control:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+        }
+        .sample-prompt {
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-left: 4px solid #667eea;
+        }
+        .sample-prompt:hover {
+            background-color: #f8f9fa;
+            transform: translateX(5px);
+        }
+        .loading-spinner {
+            display: none;
+        }
+        .result-section {
+            display: none;
+        }
+        .generated-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+        .error-message {
+            display: none;
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        .success-message {
+            display: none;
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        .image-caption {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            border-left: 4px solid #667eea;
+        }
+        @media (max-width: 991.98px) {
+            .main-container {
+                padding: 1rem 0;
+            }
+            .card {
+                margin-bottom: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container main-container">
+        <div class="text-center mb-4">
+            <h1 class="display-4 text-white mb-3">
+                <i class="bi bi-palette-fill"></i> Virtual Room Decorator
+            </h1>
+            <p class="text-white-50">Transform your ideas into beautiful room designs with AI</p>
+        </div>
+        <div class="row g-4">
+            <!-- Sample Prompts Column -->
+            <div class="col-lg-3">
+                <div class="card h-100">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0"><i class="bi bi-lightbulb"></i> Sample Prompts</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="sample-prompt p-3 mb-2" onclick="setPrompt('luxury bedroom with plants and natural light')">
+                            <strong>Luxury Bedroom:</strong><br>
+                            <small class="text-muted">luxury bedroom with plants and natural light</small>
+                        </div>
+                        <div class="sample-prompt p-3 mb-2" onclick="setPrompt('modern minimalist living room with neutral colors')">
+                            <strong>Modern Living Room:</strong><br>
+                            <small class="text-muted">modern minimalist living room with neutral colors</small>
+                        </div>
+                        <div class="sample-prompt p-3 mb-2" onclick="setPrompt('cozy cottage kitchen with warm lighting')">
+                            <strong>Cottage Kitchen:</strong><br>
+                            <small class="text-muted">cozy cottage kitchen with warm lighting</small>
+                        </div>
+                        <div class="sample-prompt p-3 mb-2" onclick="setPrompt('industrial loft with exposed brick and modern furniture')">
+                            <strong>Industrial Loft:</strong><br>
+                            <small class="text-muted">industrial loft with exposed brick and modern furniture</small>
+                        </div>
+                        <div class="sample-prompt p-3 mb-2" onclick="setPrompt('scandinavian dining room with wooden table and plants')">
+                            <strong>Scandinavian Dining:</strong><br>
+                            <small class="text-muted">scandinavian dining room with wooden table and plants</small>
+                        </div>
+                        <div class="sample-prompt p-3 mb-2" onclick="setPrompt('boho bedroom with colorful textiles and macrame')">
+                            <strong>Boho Bedroom:</strong><br>
+                            <small class="text-muted">boho bedroom with colorful textiles and macrame</small>
+                        </div>
+                        <div class="sample-prompt p-3 mb-2" onclick="setPrompt('art deco living room with gold accents and velvet furniture')">
+                            <strong>Art Deco Living Room:</strong><br>
+                            <small class="text-muted">art deco living room with gold accents and velvet furniture</small>
+                        </div>
+                        <div class="sample-prompt p-3 mb-2" onclick="setPrompt('zen meditation room with bamboo and natural elements')">
+                            <strong>Zen Meditation Room:</strong><br>
+                            <small class="text-muted">zen meditation room with bamboo and natural elements</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Main Form Column -->
+            <div class="col-lg-5">
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0"><i class="bi bi-magic"></i> Generate Your Dream Room</h5>
+                    </div>
+                    <div class="card-body">
+                        <form id="generateForm">
+                            <div class="mb-3">
+                                <label for="prompt" class="form-label">Describe your dream room:</label>
+                                <textarea 
+                                    class="form-control" 
+                                    id="prompt" 
+                                    name="prompt" 
+                                    rows="4"
+                                    placeholder="e.g., luxury bedroom with plants, modern minimalist living room, cozy cottage kitchen..."
+                                    required
+                                ></textarea>
+                            </div>
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-primary btn-lg" id="generateBtn">
+                                    <i class="bi bi-palette"></i> Generate Room Design
+                                </button>
+                            </div>
+                        </form>
+                        <!-- Loading Spinner -->
+                        <div class="loading-spinner text-center mt-4" id="loadingSpinner">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                            <p class="mt-3 text-muted">Generating your dream room... This may take a moment.</p>
+                        </div>
+                        <!-- Error Message -->
+                        <div class="error-message" id="errorMessage"></div>
+                        <!-- Success Message -->
+                        <div class="success-message" id="successMessage"></div>
+                    </div>
+                </div>
+            </div>
+            <!-- Result Section (Right Column) -->
+            <div class="col-lg-4">
+                <div class="result-section" id="resultSection">
+                    <div class="card">
+                        <div class="card-header bg-success text-white">
+                            <h5 class="mb-0"><i class="bi bi-image"></i> Generated Room Design</h5>
+                        </div>
+                        <div class="card-body">
+                            <div id="imageContainer"></div>
+                            <div id="recentImagesSection" class="mt-4" style="display:none;">
+                                <h6 class="text-secondary mb-2"><i class="bi bi-clock-history"></i> Recent Images</h6>
+                                <div id="recentImages" class="d-flex flex-wrap gap-2"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function setPrompt(prompt) {
+            document.getElementById('prompt').value = prompt;
+            document.getElementById('prompt').focus();
+        }
+        function showLoading() {
+            document.getElementById('loadingSpinner').style.display = 'block';
+            document.getElementById('generateBtn').disabled = true;
+            document.getElementById('errorMessage').style.display = 'none';
+            document.getElementById('successMessage').style.display = 'none';
+        }
+        function hideLoading() {
+            document.getElementById('loadingSpinner').style.display = 'none';
+            document.getElementById('generateBtn').disabled = false;
+        }
+        function showError(message) {
+            const errorDiv = document.getElementById('errorMessage');
+            errorDiv.innerHTML = `<i class="bi bi-exclamation-triangle"></i> ${message}`;
+            errorDiv.style.display = 'block';
+        }
+        function showSuccess(message) {
+            const successDiv = document.getElementById('successMessage');
+            successDiv.innerHTML = `<i class="bi bi-check-circle"></i> ${message}`;
+            successDiv.style.display = 'block';
+        }
+        function displayImage(base64Image, prompt) {
+            const resultSection = document.getElementById('resultSection');
+            const imageContainer = document.getElementById('imageContainer');
+            imageContainer.innerHTML = `
+                <div class="text-center">
+                    <img id="generatedImage" src="data:image/jpeg;base64,${base64Image}" alt="Generated room design" class="generated-image img-fluid">
+                    <div class="image-caption">
+                        <h6><i class="bi bi-chat-quote"></i> Prompt:</h6>
+                        <p class="mb-0">"${prompt}"</p>
+                    </div>
+                    <a id="downloadBtn" href="data:image/jpeg;base64,${base64Image}" download="room_design.jpg" class="btn btn-success mt-3"><i class="bi bi-download"></i> Download Image</a>
+                </div>
+            `;
+            resultSection.style.display = 'block';
+            resultSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            addToHistory(base64Image, prompt);
+        }
+
+        // --- Recent Images (History) ---
+        let recentImages = [];
+        function addToHistory(base64Image, prompt) {
+            // Add to front, keep max 5
+            recentImages.unshift({ image: base64Image, prompt: prompt });
+            if (recentImages.length > 5) recentImages = recentImages.slice(0, 5);
+            renderRecentImages();
+        }
+        function renderRecentImages() {
+            const section = document.getElementById('recentImagesSection');
+            const container = document.getElementById('recentImages');
+            if (recentImages.length === 0) {
+                section.style.display = 'none';
+                return;
+            }
+            section.style.display = 'block';
+            container.innerHTML = recentImages.map((item, idx) => `
+                <div class="position-relative d-inline-block" style="width:60px;height:60px;">
+                    <img src="data:image/jpeg;base64,${item.image}" alt="History ${idx+1}" title="${item.prompt.replace(/"/g, '&quot;')}" class="rounded border" style="width:60px;height:60px;object-fit:cover;cursor:pointer;" onclick="showFromHistory(${idx})">
+                    <button type="button" class="btn btn-sm btn-light position-absolute top-0 end-0 p-1" style="z-index:2;" title="Delete" onclick="deleteFromHistory(event,${idx})"><i class="bi bi-trash text-danger"></i></button>
+                </div>
+            `).join('');
+        }
+        function showFromHistory(idx) {
+            const item = recentImages[idx];
+            if (item) displayImage(item.image, item.prompt);
+        }
+        function deleteFromHistory(e, idx) {
+            e.stopPropagation();
+            recentImages.splice(idx, 1);
+            renderRecentImages();
+        }
+
+        document.getElementById('generateForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const prompt = document.getElementById('prompt').value.trim();
+            if (!prompt) {
+                showError('Please enter a room description.');
+                return;
+            }
+            showLoading();
+            try {
+                const response = await fetch('/generate/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ prompt: prompt })
+                });
+                const data = await response.json();
+                if (data.success) {
+                    displayImage(data.image, data.prompt);
+                    showSuccess('Room design generated successfully!');
+                } else {
+                    // Handle specific error codes
+                    let errorMessage = data.error || 'Failed to generate image. Please try again.';
+                    if (response.status === 401) {
+                        errorMessage = 'Authentication required. Please check your API token.';
+                    } else if (response.status === 403) {
+                        errorMessage = 'Access forbidden. Please check your API permissions.';
+                    } else if (response.status === 404) {
+                        errorMessage = 'API endpoint not found. Please check the configuration.';
+                    } else if (response.status === 429) {
+                        errorMessage = 'Rate limit exceeded. Please try again later.';
+                    } else if (response.status >= 500) {
+                        errorMessage = 'Server error. Please try again later.';
+                    }
+                    showError(errorMessage);
+                }
+            } catch (error) {
+                showError('Network error. Please check your connection and try again.');
+            } finally {
+                hideLoading();
+            }
+        });
+    </script>
+</body>
+</html> 

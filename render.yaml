@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: virtual-room-decorator-sdxl
+    env: python
+    buildCommand: "./build.sh"
+    startCommand: "gunicorn virtual_room_decorator_sdxl.wsgi:application"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.9.16
+      - key: DJANGO_SETTINGS_MODULE
+        value: virtual_room_decorator_sdxl.settings 
