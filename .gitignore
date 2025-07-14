@@ -147,3 +147,4 @@ staticfiles/
 
 # Ignore environment variables
 .env
+.env
