@@ -1,5 +1,10 @@
+setuptools>=65.0.0
+wheel
 Django==5.2.4
 gunicorn==21.2.0
 requests==2.31.0
 python-dotenv==1.0.0
-Pillow==9.5.0
+Pillow>=10.0.0
+diffusers==0.27.2
+transformers==4.41.2
+accelerate==0.30.1

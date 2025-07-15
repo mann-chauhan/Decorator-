@@ -33,7 +33,7 @@ def generate_image_api(prompt):
     
     try:
         print(f"Making API request to {API_URL} with prompt: {prompt[:50]}...")
-        response = requests.post(API_URL, headers=headers, json=payload, timeout=30)
+        response = requests.post(API_URL, headers=headers, json=payload, timeout=90)
         print(f"API Response Status: {response.status_code}")
         
         if response.status_code == 200:
