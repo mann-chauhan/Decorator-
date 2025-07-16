@@ -514,7 +514,7 @@
             <img src="https://images.unsplash.com/photo-1460518451285-97b6aa326961?auto=format&fit=crop&w=600&q=80" class="bg-sample-img hero3" alt="Sample Room 3" />
             <div class="w-100 d-flex justify-content-center align-items-center mb-3" style="background: none;">
                 <img src="{% static 'room_decorator/room_deco.gif' %}" alt="Room Decorator Illustration" class="img-fluid rounded-4 shadow-lg" style="max-width: 340px; background: rgba(30,30,30,0.18); backdrop-filter: blur(2px); border: 2px solid #232323;" loading="lazy">
-            </div>
+        </div>
             <h1>Design Your Dream Room</h1>
             <p>Describe your perfect space and let AI turn your vision into a stunning visual. <br><span style="color:var(--neon-green);opacity:0.8;">No design skills needed!</span></p>
             <a href="#generate" class="btn btn-cta btn-animated"><i class="bi bi-lightning-charge me-2"></i>Start Creating Now</a>
@@ -525,31 +525,31 @@
                 <div class="sample-card" onclick="setPrompt('luxury bedroom with plants and natural light')">
                     <strong>Luxury Bedroom</strong><br>
                     <small>luxury bedroom with plants and natural light</small>
-                </div>
+                    </div>
                 <div class="sample-card" onclick="setPrompt('modern minimalist living room with neutral colors')">
                     <strong>Modern Living Room</strong><br>
                     <small>modern minimalist living room with neutral colors</small>
-                </div>
+                        </div>
                 <div class="sample-card" onclick="setPrompt('cozy cottage kitchen with warm lighting')">
                     <strong>Cottage Kitchen</strong><br>
                     <small>cozy cottage kitchen with warm lighting</small>
-                </div>
+                        </div>
                 <div class="sample-card" onclick="setPrompt('industrial loft with exposed brick and modern furniture')">
                     <strong>Industrial Loft</strong><br>
                     <small>industrial loft with exposed brick and modern furniture</small>
-                </div>
+                        </div>
                 <div class="sample-card" onclick="setPrompt('scandinavian dining room with wooden table and plants')">
                     <strong>Scandinavian Dining</strong><br>
                     <small>scandinavian dining room with wooden table and plants</small>
-                </div>
+                        </div>
                 <div class="sample-card" onclick="setPrompt('boho bedroom with colorful textiles and macrame')">
                     <strong>Boho Bedroom</strong><br>
                     <small>boho bedroom with colorful textiles and macrame</small>
-                </div>
+                        </div>
                 <div class="sample-card" onclick="setPrompt('art deco living room with gold accents and velvet furniture')">
                     <strong>Art Deco Living Room</strong><br>
                     <small>art deco living room with gold accents and velvet furniture</small>
-                </div>
+                        </div>
                 <div class="sample-card" onclick="setPrompt('zen meditation room with bamboo and natural elements')">
                     <strong>Zen Meditation Room</strong><br>
                     <small>zen meditation room with bamboo and natural elements</small>
@@ -566,13 +566,13 @@
                 {% csrf_token %}
                 <div class="mb-3 position-relative" style="z-index:11;">
                     <label for="prompt" class="form-label">Room Description <span style="color:var(--neon-green);font-size:0.98em;">(be creative!)</span></label>
-                    <textarea 
-                        class="form-control" 
-                        id="prompt" 
-                        name="prompt" 
-                        rows="4"
+                                <textarea 
+                                    class="form-control" 
+                                    id="prompt" 
+                                    name="prompt" 
+                                    rows="4"
                         placeholder="e.g., A cozy boho bedroom with plants and natural light, or a minimalist workspace with sunlight."
-                        required
+                                    required
                         autocomplete="off"
                         oninput="showSuggestions(this.value)"
                         onfocus="showSuggestions(this.value)"
@@ -580,13 +580,13 @@
                     >{% if request.POST.prompt %}{{ request.POST.prompt }}{% endif %}</textarea>
                     <div id="suggestDropdown" class="suggest-dropdown" style="display:none;"></div>
                     <div style="color:var(--gray);font-size:0.97em;margin-top:0.3em;">Tip: Try different styles or moods, like <span style="color:var(--neon-orange);">'Scandinavian living room'</span> or <span style="color:var(--neon-orange);">'Art Deco lounge'</span>.</div>
-                </div>
-                <div class="d-grid">
+                            </div>
+                            <div class="d-grid">
                     <button type="submit" class="btn btn-animated btn-lg" id="generateBtn">
-                        <i class="bi bi-palette"></i> Generate Room Design
-                    </button>
-                </div>
-            </form>
+                                    <i class="bi bi-palette"></i> Generate Room Design
+                                </button>
+                            </div>
+                        </form>
             <!-- Animated Loading Dots -->
             <div class="loading-spinner text-center mt-4" id="loadingSpinner" style="display:none;">
                 <div class="loading-dots">
@@ -698,8 +698,8 @@
         const form = document.getElementById('generateForm');
         if (form) {
             form.addEventListener('submit', function() {
-                document.getElementById('loadingSpinner').style.display = 'block';
-                document.getElementById('generateBtn').disabled = true;
+            document.getElementById('loadingSpinner').style.display = 'block';
+            document.getElementById('generateBtn').disabled = true;
             });
         }
         // Hide spinner on page load (in case of back nav)
@@ -710,7 +710,7 @@
             const resultSection = document.querySelector('.result-section');
             if (resultSection) {
                 setTimeout(() => {
-                    resultSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            resultSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 }, 300);
             }
         });
