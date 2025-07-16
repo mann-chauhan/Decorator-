@@ -18,12 +18,7 @@ SECRET_KEY = '++!c*##(8s6!5-s0vuwiusxhao==t_=n&4q6znbx9#)_dsm^9z'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [
-    'localhost',
-    '127.0.0.1',
-    '.render.com',
-    'virtual-room-decorator-sdxl-production.up.railway.app'
-]
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'virtual-room-decorator-sdxl-1.onrender.com']
 
 
 # Application definition
@@ -116,8 +111,14 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'room_decorator/static'),
+]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField' 
+
+# Hugging Face API Key
+HUGGINGFACE_API_KEY = os.environ.get("HUGGINGFACE_API_KEY") 

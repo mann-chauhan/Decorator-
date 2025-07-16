@@ -1,226 +1,634 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Virtual Room Decorator</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Sora:wght@600;700&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
     <style>
-        body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        :root {
+            --bg-gradient: linear-gradient(135deg, #111111 0%, #1F1F1F 100%);
+            --glass-bg: rgba(60, 65, 60, 0.82);
+            --glass-blur: blur(16px);
+            --white: #F5F5F5;
+            --gray: #C1C1C1;
+            --neon-orange: #FF5F3C;
+            --neon-green: #6EFF9F;
+            --card-shadow: 0 8px 32px 0 rgba(0,0,0,0.25);
+            --border-dark: #232323;
+        }
+        html, body {
             min-height: 100vh;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg-gradient);
+            font-family: 'Inter', 'Sora', 'Space Grotesk', Arial, sans-serif;
+            color: var(--white);
+            overflow-x: hidden;
         }
-        .main-container {
-            min-height: 100vh;
-            padding: 2rem 0;
+        /* Animations */
+        .fadeIn { animation: fadeIn 1.2s cubic-bezier(.4,0,.2,1) both; }
+        .scaleIn { animation: scaleIn 1s cubic-bezier(.4,0,.2,1) both; }
+        .slideUp { animation: slideUp 1.1s cubic-bezier(.4,0,.2,1) both; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes scaleIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
+        /* Navbar */
+        .navbar {
+            background: transparent;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            transition: background 0.3s;
         }
-        .card {
+        .navbar-brand, .navbar-nav .nav-link {
+            color: var(--white) !important;
+            font-weight: 700;
+            font-size: 1.2rem;
+            letter-spacing: 0.5px;
+            font-family: 'Space Grotesk', 'Inter', Arial, sans-serif;
+        }
+        .navbar-nav .nav-link.active, .navbar-nav .nav-link:hover {
+            color: var(--neon-orange) !important;
+        }
+        .navbar-toggler {
             border: none;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            backdrop-filter: blur(10px);
-            background: rgba(255, 255, 255, 0.95);
         }
-        .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        .navbar-toggler:focus {
+            box-shadow: none;
+        }
+        /* Hero */
+        .hero-section {
+            position: relative;
+            background: var(--glass-bg);
+            border-radius: 2.5rem;
+            padding: 5rem 2rem 4rem 2rem;
+            margin: 3rem 0 2.5rem 0;
+            text-align: center;
+            box-shadow: var(--card-shadow);
+            overflow: hidden;
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+        }
+        .hero-bg-abstract {
+            position: absolute;
+            top: -60px; left: 50%;
+            width: 120vw; height: 400px;
+            background: radial-gradient(ellipse at 60% 40%, #232323 60%, transparent 100%),
+                        linear-gradient(120deg, #FF5F3C33 0%, #6EFF9F22 100%);
+            filter: blur(60px) brightness(0.7);
+            z-index: 0;
+            transform: translateX(-50%);
+        }
+        .hero-section h1 {
+            font-size: 3.2rem;
+            font-weight: 800;
+            letter-spacing: 1px;
+            margin-bottom: 1.2rem;
+            color: var(--white);
+            text-shadow: 0 4px 32px #1118, 0 1px 0 #000;
+            font-family: 'Space Grotesk', 'Inter', Arial, sans-serif;
+            position: relative;
+            z-index: 1;
+        }
+        .hero-section p {
+            font-size: 1.35rem;
+            color: var(--gray);
+            margin-bottom: 2.2rem;
+            font-weight: 500;
+            position: relative;
+            z-index: 1;
+        }
+        .hero-section .btn-cta {
+            background: #b33c1a;
+            color: var(--white);
+            font-weight: 700;
             border: none;
-            border-radius: 10px;
-            padding: 12px 30px;
-            font-weight: 600;
-            transition: all 0.3s ease;
+            border-radius: 2rem;
+            padding: 1.1rem 2.8rem;
+            font-size: 1.25rem;
+            box-shadow: 0 0 6px 1px var(--neon-orange), 0 2px 12px #0006;
+            transition: background 0.2s, color 0.2s, transform 0.2s, box-shadow 0.2s;
+            filter: none;
+            position: relative;
+            z-index: 1;
         }
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        .hero-section .btn-cta:hover {
+            background: #ff7c5c;
+            color: var(--bg-gradient);
+            transform: scale(1.05) translateY(-2px);
+            box-shadow: 0 0 12px 2px var(--neon-orange), 0 4px 20px #0008;
+            filter: none;
         }
-        .btn-outline-primary {
-            border-color: #667eea;
-            color: #667eea;
-            border-radius: 8px;
-            transition: all 0.3s ease;
+        /* About */
+        .about-section {
+            background: var(--glass-bg);
+            border-radius: 1.7rem;
+            box-shadow: var(--card-shadow);
+            padding: 2.5rem 2rem;
+            margin: -3rem auto 2.5rem auto;
+            text-align: center;
+            max-width: 700px;
+            position: relative;
+            z-index: 2;
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            animation-delay: 0.2s;
         }
-        .btn-outline-primary:hover {
-            background-color: #667eea;
-            border-color: #667eea;
-            transform: translateY(-1px);
+        .about-section h2 {
+            color: var(--white);
+            font-weight: 700;
+            margin-bottom: 1rem;
+            font-family: 'Inter', Arial, sans-serif;
+        }
+        .about-section p {
+            color: var(--gray);
+            font-size: 1.15rem;
+            font-weight: 500;
+        }
+        /* Sample Prompts Grid */
+        .sample-prompts-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+        @media (max-width: 991.98px) {
+            .sample-prompts-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        .sample-card {
+            background: var(--glass-bg);
+            border-radius: 1.2rem;
+            box-shadow: 0 2px 16px #000a, 0 0 0 1.5px var(--accent-moss);
+            border: none;
+            padding: 1.2rem 1.2rem 1rem 1.2rem;
+            transition: box-shadow 0.25s, border 0.2s, transform 0.2s, filter 0.2s;
+            cursor: pointer;
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            position: relative;
+        }
+        .sample-card:hover {
+            box-shadow: 0 6px 32px 4px var(--neon-orange), 0 0 0 2.5px var(--neon-orange);
+            filter: brightness(1.08) drop-shadow(0 0 8px var(--neon-orange));
+            transform: scale(1.03) translateY(-2px);
+        }
+        .sample-card strong {
+            color: var(--white);
+            font-weight: 700;
+            font-size: 1.1rem;
+            font-family: 'Inter', Arial, sans-serif;
+        }
+        .sample-card small {
+            color: var(--gray);
+            font-weight: 400;
+        }
+        /* Generator */
+        .generator-section {
+            background: var(--glass-bg);
+            border-radius: 1.5rem;
+            box-shadow: var(--card-shadow);
+            padding: 2rem 2rem 2.5rem 2rem;
+            margin-bottom: 2.5rem;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+            position: relative;
+            z-index: 2;
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+        }
+        .generator-section h3 {
+            color: var(--white);
+            font-weight: 700;
+            margin-bottom: 1.2rem;
+            font-family: 'Inter', Arial, sans-serif;
         }
         .form-control {
-            border-radius: 10px;
-            border: 2px solid #e1e5e9;
+            border-radius: 1rem;
+            border: 2px solid var(--accent-moss);
+            background: var(--bg-gradient);
+            color: var(--white);
             padding: 15px;
-            transition: border-color 0.3s ease;
+            font-size: 1.1rem;
+            font-weight: 500;
+            transition: border-color 0.3s, background 0.3s, box-shadow 0.3s;
+            box-shadow: 0 2px 8px #0004;
         }
         .form-control:focus {
-            border-color: #667eea;
-            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+            border-color: var(--neon-green);
+            background: var(--surface-dark);
+            box-shadow: 0 0 0 0.2rem var(--neon-green);
+            color: var(--white);
         }
-        .sample-prompt {
-            cursor: pointer;
-            transition: all 0.3s ease;
-            border-left: 4px solid #667eea;
+        .form-label {
+            color: var(--white);
+            font-weight: 700;
+            letter-spacing: 0.2px;
         }
-        .sample-prompt:hover {
-            background-color: #f8f9fa;
-            transform: translateX(5px);
+        ::placeholder {
+            color: var(--gray) !important;
+            opacity: 1;
+            font-weight: 400;
+        }
+        .btn-animated {
+            background: #e04e2e;
+            border: none;
+            border-radius: 2rem;
+            padding: 0.95rem 2.5rem;
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--white);
+            box-shadow: 0 2px 8px 1px #e04e2e55, 0 2px 8px #0006;
+            transition: background 0.2s, color 0.2s, transform 0.2s, box-shadow 0.2s;
+            letter-spacing: 0.5px;
+            filter: none;
+        }
+        .btn-animated:hover {
+            background: #ff7c5c;
+            color: var(--surface-dark);
+            transform: scale(1.04) translateY(-1px);
+            box-shadow: 0 0 16px 2px #e04e2e55, 0 4px 16px #0008;
+            filter: none;
         }
         .loading-spinner {
-            display: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 1.5rem;
+        }
+        .spinner-border {
+            width: 3rem;
+            height: 3rem;
+            border-width: 0.4em;
+            color: var(--neon-orange);
         }
         .result-section {
-            display: none;
+            margin-top: 2rem;
         }
         .generated-image {
             max-width: 100%;
             height: auto;
-            border-radius: 10px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            border-radius: 1.2rem;
+            box-shadow: 0 8px 32px #000a, 0 0 0 2px var(--accent-moss);
+            margin-bottom: 1rem;
+            transition: box-shadow 0.3s;
+            background: var(--bg-gradient);
+        }
+        .generated-image:hover {
+            box-shadow: 0 16px 40px var(--neon-orange);
         }
         .error-message {
-            display: none;
-            background-color: #f8d7da;
-            border: 1px solid #f5c6cb;
-            color: #721c24;
+            background-color: #ff5f3c22;
+            border: 1px solid var(--neon-orange);
+            color: var(--neon-orange);
             padding: 15px;
-            border-radius: 8px;
+            border-radius: 10px;
             margin: 15px 0;
+            font-weight: 600;
+            box-shadow: 0 2px 8px #0008;
+            letter-spacing: 0.2px;
         }
-        .success-message {
-            display: none;
-            background-color: #d4edda;
-            border: 1px solid #c3e6cb;
-            color: #155724;
-            padding: 15px;
-            border-radius: 8px;
-            margin: 15px 0;
+        /* Footer */
+        .footer {
+            margin-top: 3rem;
+            padding: 1.5rem 0 0.5rem 0;
+            text-align: center;
+            color: var(--gray);
+            font-size: 1rem;
+            background: var(--surface-dark);
+            font-weight: 500;
+            border-radius: 18px 18px 0 0;
         }
-        .image-caption {
-            background-color: #f8f9fa;
-            padding: 15px;
-            border-radius: 8px;
-            margin-top: 15px;
-            border-left: 4px solid #667eea;
+        .footer .social-icons a {
+            color: var(--gray);
+            margin: 0 0.5rem;
+            font-size: 1.3rem;
+            transition: color 0.2s, filter 0.2s;
+            filter: drop-shadow(0 0 2px var(--neon-green));
+        }
+        .footer .social-icons a:hover {
+            color: var(--neon-orange);
+            filter: drop-shadow(0 0 8px var(--neon-orange));
+        }
+        hr {
+            border-color: var(--accent-moss);
+        }
+        /* Animated Loading Dots */
+        .loading-dots {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 1.5rem;
+        }
+        .loading-dot {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: var(--neon-orange);
+            box-shadow: 0 0 12px 2px var(--neon-orange);
+            opacity: 0.7;
+            animation: loading-bounce 1.2s infinite ease-in-out;
+        }
+        .loading-dot:nth-child(2) { animation-delay: 0.2s; }
+        .loading-dot:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes loading-bounce {
+            0%, 80%, 100% { transform: scale(0.8); opacity: 0.7; }
+            40% { transform: scale(1.2); opacity: 1; }
+        }
+        /* Auto-suggest Dropdown */
+        .suggest-dropdown {
+            position: absolute;
+            left: 0; right: 0;
+            top: 100%;
+            z-index: 10;
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            border-radius: 0 0 1rem 1rem;
+            box-shadow: 0 8px 32px #000a;
+            border: 1px solid var(--accent-moss);
+            max-height: 220px;
+            overflow-y: auto;
+            animation: fadeIn 0.3s;
+        }
+        .suggest-item {
+            padding: 0.8rem 1.2rem;
+            color: var(--gray);
+            cursor: pointer;
+            transition: background 0.18s, color 0.18s;
+            font-size: 1.05rem;
+        }
+        .suggest-item:hover, .suggest-item.active {
+            background: var(--neon-orange);
+            color: var(--white);
+        }
+        .suggest-hint {
+            font-size: 0.95rem;
+            color: var(--neon-green);
+            margin-left: 0.5rem;
+            opacity: 0.7;
+            animation: fadeIn 0.6s;
+        }
+        /* History Gallery */
+        .history-section {
+            margin-top: 2.5rem;
+            margin-bottom: 2.5rem;
+        }
+        .history-title {
+            color: var(--white);
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 1.2rem;
+        }
+        .history-gallery {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+        }
+        .history-card {
+            background: var(--glass-bg);
+            border-radius: 1.2rem;
+            box-shadow: 0 2px 16px #000a, 0 0 0 1.5px var(--accent-moss);
+            border: none;
+            padding: 1rem 1rem 0.7rem 1rem;
+            width: 220px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: box-shadow 0.2s, transform 0.2s;
+        }
+        .history-card img {
+            width: 100%;
+            border-radius: 0.8rem;
+            margin-bottom: 0.7rem;
+            box-shadow: 0 4px 16px #0006;
+        }
+        .history-prompt {
+            color: var(--gray);
+            font-size: 0.98rem;
+            margin-bottom: 0.7rem;
+            text-align: center;
+            min-height: 2.2em;
+        }
+        .history-actions {
+            display: flex;
+            gap: 0.7rem;
+            margin-bottom: 0.5rem;
+        }
+        .history-btn {
+            background: none;
+            border: none;
+            color: var(--gray);
+            font-size: 1.2rem;
+            border-radius: 50%;
+            padding: 0.4rem 0.5rem;
+            transition: background 0.18s, color 0.18s, box-shadow 0.18s;
+            cursor: pointer;
+        }
+        .history-btn:hover {
+            background: var(--neon-orange);
+            color: var(--white);
+            box-shadow: 0 0 8px var(--neon-orange);
+        }
+        /* Decorative Sample Images */
+        .bg-sample-img {
+            position: absolute;
+            z-index: 0;
+            opacity: 0.18;
+            filter: blur(18px) grayscale(0.3) brightness(0.7);
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+        .bg-sample-img.hero1 {
+            top: 10%; left: 2%; width: 220px; height: auto;
+        }
+        .bg-sample-img.hero2 {
+            top: 40%; right: 3%; width: 180px; height: auto;
+        }
+        .bg-sample-img.hero3 {
+            bottom: -30px; left: 50%; width: 320px; height: auto; transform: translateX(-50%);
+        }
+        .bg-sample-img.gen1 {
+            top: 60%; left: -60px; width: 120px; height: auto;
+        }
+        .bg-sample-img.gen2 {
+            bottom: 10px; right: -50px; width: 140px; height: auto;
+        }
+        @media (max-width: 991.98px) {
+            .bg-sample-img.hero1, .bg-sample-img.hero2, .bg-sample-img.hero3, .bg-sample-img.gen1, .bg-sample-img.gen2 {
+                display: none;
+            }
         }
         @media (max-width: 991.98px) {
             .main-container {
                 padding: 1rem 0;
             }
-            .card {
-                margin-bottom: 1rem;
+            .hero-section h1 {
+                font-size: 2.1rem;
             }
         }
     </style>
 </head>
 <body>
-    <div class="container main-container">
-        <div class="text-center mb-4">
-            <h1 class="display-4 text-white mb-3">
-                <i class="bi bi-palette-fill"></i> Virtual Room Decorator
-            </h1>
-            <p class="text-white-50">Transform your ideas into beautiful room designs with AI</p>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg mb-4 fadeIn">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#"><i class="bi bi-palette2 me-2" style="color: var(--neon-orange);"></i>Virtual Room Decorator</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="#">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#about">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#generate">Generate</a>
+                    </li>
+                </ul>
+            </div>
         </div>
-        <div class="row g-4">
-            <!-- Sample Prompts Column -->
-            <div class="col-lg-3">
-                <div class="card h-100">
-                    <div class="card-header bg-primary text-white">
-                        <h5 class="mb-0"><i class="bi bi-lightbulb"></i> Sample Prompts</h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="sample-prompt p-3 mb-2" onclick="setPrompt('luxury bedroom with plants and natural light')">
-                            <strong>Luxury Bedroom:</strong><br>
-                            <small class="text-muted">luxury bedroom with plants and natural light</small>
-                        </div>
-                        <div class="sample-prompt p-3 mb-2" onclick="setPrompt('modern minimalist living room with neutral colors')">
-                            <strong>Modern Living Room:</strong><br>
-                            <small class="text-muted">modern minimalist living room with neutral colors</small>
-                        </div>
-                        <div class="sample-prompt p-3 mb-2" onclick="setPrompt('cozy cottage kitchen with warm lighting')">
-                            <strong>Cottage Kitchen:</strong><br>
-                            <small class="text-muted">cozy cottage kitchen with warm lighting</small>
-                        </div>
-                        <div class="sample-prompt p-3 mb-2" onclick="setPrompt('industrial loft with exposed brick and modern furniture')">
-                            <strong>Industrial Loft:</strong><br>
-                            <small class="text-muted">industrial loft with exposed brick and modern furniture</small>
-                        </div>
-                        <div class="sample-prompt p-3 mb-2" onclick="setPrompt('scandinavian dining room with wooden table and plants')">
-                            <strong>Scandinavian Dining:</strong><br>
-                            <small class="text-muted">scandinavian dining room with wooden table and plants</small>
-                        </div>
-                        <div class="sample-prompt p-3 mb-2" onclick="setPrompt('boho bedroom with colorful textiles and macrame')">
-                            <strong>Boho Bedroom:</strong><br>
-                            <small class="text-muted">boho bedroom with colorful textiles and macrame</small>
-                        </div>
-                        <div class="sample-prompt p-3 mb-2" onclick="setPrompt('art deco living room with gold accents and velvet furniture')">
-                            <strong>Art Deco Living Room:</strong><br>
-                            <small class="text-muted">art deco living room with gold accents and velvet furniture</small>
-                        </div>
-                        <div class="sample-prompt p-3 mb-2" onclick="setPrompt('zen meditation room with bamboo and natural elements')">
-                            <strong>Zen Meditation Room:</strong><br>
-                            <small class="text-muted">zen meditation room with bamboo and natural elements</small>
-                        </div>
-                    </div>
+    </nav>
+    <div class="container main-container">
+        <!-- Hero Section -->
+        <section class="hero-section mb-5 scaleIn" id="hero" style="overflow:visible;">
+            <div class="hero-bg-abstract"></div>
+            <!-- Decorative sample images -->
+            <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=600&q=80" class="bg-sample-img hero1" alt="Sample Room 1" />
+            <img src="https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?auto=format&fit=crop&w=600&q=80" class="bg-sample-img hero2" alt="Sample Room 2" />
+            <img src="https://images.unsplash.com/photo-1460518451285-97b6aa326961?auto=format&fit=crop&w=600&q=80" class="bg-sample-img hero3" alt="Sample Room 3" />
+            <div class="w-100 d-flex justify-content-center align-items-center mb-3" style="background: none;">
+                <img src="{% static 'room_decorator/room_deco.gif' %}" alt="Room Decorator Illustration" class="img-fluid rounded-4 shadow-lg" style="max-width: 340px; background: rgba(30,30,30,0.18); backdrop-filter: blur(2px); border: 2px solid #232323;" loading="lazy">
+            </div>
+            <h1>Design Your Dream Room</h1>
+            <p>Describe your perfect space and let AI turn your vision into a stunning visual. <br><span style="color:var(--neon-green);opacity:0.8;">No design skills needed!</span></p>
+            <a href="#generate" class="btn btn-cta btn-animated"><i class="bi bi-lightning-charge me-2"></i>Start Creating Now</a>
+        </section>
+        <!-- Sample Prompts Section -->
+        <section class="mb-5 fadeIn">
+            <div class="sample-prompts-grid">
+                <div class="sample-card" onclick="setPrompt('luxury bedroom with plants and natural light')">
+                    <strong>Luxury Bedroom</strong><br>
+                    <small>luxury bedroom with plants and natural light</small>
+                </div>
+                <div class="sample-card" onclick="setPrompt('modern minimalist living room with neutral colors')">
+                    <strong>Modern Living Room</strong><br>
+                    <small>modern minimalist living room with neutral colors</small>
+                </div>
+                <div class="sample-card" onclick="setPrompt('cozy cottage kitchen with warm lighting')">
+                    <strong>Cottage Kitchen</strong><br>
+                    <small>cozy cottage kitchen with warm lighting</small>
+                </div>
+                <div class="sample-card" onclick="setPrompt('industrial loft with exposed brick and modern furniture')">
+                    <strong>Industrial Loft</strong><br>
+                    <small>industrial loft with exposed brick and modern furniture</small>
+                </div>
+                <div class="sample-card" onclick="setPrompt('scandinavian dining room with wooden table and plants')">
+                    <strong>Scandinavian Dining</strong><br>
+                    <small>scandinavian dining room with wooden table and plants</small>
+                </div>
+                <div class="sample-card" onclick="setPrompt('boho bedroom with colorful textiles and macrame')">
+                    <strong>Boho Bedroom</strong><br>
+                    <small>boho bedroom with colorful textiles and macrame</small>
+                </div>
+                <div class="sample-card" onclick="setPrompt('art deco living room with gold accents and velvet furniture')">
+                    <strong>Art Deco Living Room</strong><br>
+                    <small>art deco living room with gold accents and velvet furniture</small>
+                </div>
+                <div class="sample-card" onclick="setPrompt('zen meditation room with bamboo and natural elements')">
+                    <strong>Zen Meditation Room</strong><br>
+                    <small>zen meditation room with bamboo and natural elements</small>
                 </div>
             </div>
-            <!-- Main Form Column -->
-            <div class="col-lg-5">
-                <div class="card">
-                    <div class="card-header bg-primary text-white">
-                        <h5 class="mb-0"><i class="bi bi-magic"></i> Generate Your Dream Room</h5>
-                    </div>
-                    <div class="card-body">
-                        <form id="generateForm">
-                            <div class="mb-3">
-                                <label for="prompt" class="form-label">Describe your dream room:</label>
-                                <textarea 
-                                    class="form-control" 
-                                    id="prompt" 
-                                    name="prompt" 
-                                    rows="4"
-                                    placeholder="e.g., luxury bedroom with plants, modern minimalist living room, cozy cottage kitchen..."
-                                    required
-                                ></textarea>
-                            </div>
-                            <div class="d-grid">
-                                <button type="submit" class="btn btn-primary btn-lg" id="generateBtn">
-                                    <i class="bi bi-palette"></i> Generate Room Design
-                                </button>
-                            </div>
-                        </form>
-                        <!-- Loading Spinner -->
-                        <div class="loading-spinner text-center mt-4" id="loadingSpinner">
-                            <div class="spinner-border text-primary" role="status">
-                                <span class="visually-hidden">Loading...</span>
-                            </div>
-                            <p class="mt-3 text-muted">Generating your dream room... This may take a moment.</p>
-                        </div>
-                        <!-- Error Message -->
-                        <div class="error-message" id="errorMessage"></div>
-                        <!-- Success Message -->
-                        <div class="success-message" id="successMessage"></div>
-                    </div>
+        </section>
+        <!-- Room Generator Section -->
+        <section class="generator-section mb-5 slideUp" id="generate" style="overflow:visible;position:relative;">
+            <!-- Decorative sample images for generator -->
+            <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=600&q=80" class="bg-sample-img gen1" alt="Sample Room 1" />
+            <img src="https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?auto=format&fit=crop&w=600&q=80" class="bg-sample-img gen2" alt="Sample Room 2" />
+            <h3>Generate Your Dream Room</h3>
+            <form id="generateForm" method="post" action="/generate-image/" autocomplete="off" style="position:relative;">
+                {% csrf_token %}
+                <div class="mb-3 position-relative" style="z-index:11;">
+                    <label for="prompt" class="form-label">Room Description <span style="color:var(--neon-green);font-size:0.98em;">(be creative!)</span></label>
+                    <textarea 
+                        class="form-control" 
+                        id="prompt" 
+                        name="prompt" 
+                        rows="4"
+                        placeholder="e.g., A cozy boho bedroom with plants and natural light, or a minimalist workspace with sunlight."
+                        required
+                        autocomplete="off"
+                        oninput="showSuggestions(this.value)"
+                        onfocus="showSuggestions(this.value)"
+                        onblur="setTimeout(hideSuggestions, 150)"
+                    >{% if request.POST.prompt %}{{ request.POST.prompt }}{% endif %}</textarea>
+                    <div id="suggestDropdown" class="suggest-dropdown" style="display:none;"></div>
+                    <div style="color:var(--gray);font-size:0.97em;margin-top:0.3em;">Tip: Try different styles or moods, like <span style="color:var(--neon-orange);">'Scandinavian living room'</span> or <span style="color:var(--neon-orange);">'Art Deco lounge'</span>.</div>
+                </div>
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-animated btn-lg" id="generateBtn">
+                        <i class="bi bi-palette"></i> Generate Room Design
+                    </button>
+                </div>
+            </form>
+            <!-- Animated Loading Dots -->
+            <div class="loading-spinner text-center mt-4" id="loadingSpinner" style="display:none;">
+                <div class="loading-dots">
+                    <div class="loading-dot"></div>
+                    <div class="loading-dot"></div>
+                    <div class="loading-dot"></div>
+                </div>
+                <p class="mt-3" style="color: var(--neon-orange);">Generating your dream room... This may take a moment.</p>
+            </div>
+            <!-- Error Message -->
+            {% if error %}
+            <div class="error-message" style="display:block;">{{ error }}</div>
+            {% endif %}
+            <!-- Result Section -->
+            {% if image_url %}
+            <div class="result-section">
+                <div class="text-center">
+                    <img src="{{ image_url }}" alt="Generated Room" class="generated-image" id="generatedImage" />
                 </div>
             </div>
-            <!-- Result Section (Right Column) -->
-            <div class="col-lg-4">
-                <div class="result-section" id="resultSection">
-                    <div class="card">
-                        <div class="card-header bg-success text-white">
-                            <h5 class="mb-0"><i class="bi bi-image"></i> Generated Room Design</h5>
-                        </div>
-                        <div class="card-body">
-                            <div id="imageContainer"></div>
-                            <div id="recentImagesSection" class="mt-4" style="display:none;">
-                                <h6 class="text-secondary mb-2"><i class="bi bi-clock-history"></i> Recent Images</h6>
-                                <div id="recentImages" class="d-flex flex-wrap gap-2"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            {% endif %}
+        </section>
+        <!-- History Section -->
+        <section class="history-section fadeIn" id="historySection">
+            <div class="history-title"><i class="bi bi-clock-history me-2"></i>Recent Designs</div>
+            <div class="history-gallery" id="historyGallery"></div>
+        </section>
+        <!-- About Section (moved to bottom) -->
+        <section class="about-section mb-5 slideUp" id="about" style="margin-top: 6rem;">
+            <h2>About Virtual Room Decorator</h2>
+            <p>
+                Virtual Room Decorator uses state-of-the-art AI to turn your room ideas into stunning visuals. Just describe your dream space, and our AI will generate a unique design for you. Perfect for home renovators, interior designers, or anyone looking for inspiration!
+            </p>
+        </section>
+        <!-- Footer -->
+        <div class="footer mt-5 fadeIn">
+            <div class="social-icons mb-2">
+                <a href="#" title="Twitter"><i class="bi bi-twitter"></i></a>
+                <a href="#" title="Instagram"><i class="bi bi-instagram"></i></a>
+                <a href="#" title="Github"><i class="bi bi-github"></i></a>
             </div>
+            <span>&copy; Virtual Room Decorator. All rights reserved.</span>
         </div>
     </div>
     <!-- Bootstrap JS -->
@@ -230,118 +638,128 @@
             document.getElementById('prompt').value = prompt;
             document.getElementById('prompt').focus();
         }
-        function showLoading() {
-            document.getElementById('loadingSpinner').style.display = 'block';
-            document.getElementById('generateBtn').disabled = true;
-            document.getElementById('errorMessage').style.display = 'none';
-            document.getElementById('successMessage').style.display = 'none';
+        // Auto-suggest dropdown logic
+        const samplePrompts = [
+            'luxury bedroom with plants and natural light',
+            'modern minimalist living room with neutral colors',
+            'cozy cottage kitchen with warm lighting',
+            'industrial loft with exposed brick and modern furniture',
+            'scandinavian dining room with wooden table and plants',
+            'boho bedroom with colorful textiles and macrame',
+            'art deco living room with gold accents and velvet furniture',
+            'zen meditation room with bamboo and natural elements'
+        ];
+        const animatedHints = [
+            'Try "minimalist workspace with lots of sunlight"',
+            'How about "vintage reading nook with bookshelves"?',
+            'Or "tropical bathroom with indoor plants"?',
+            'Try "kids playroom with colorful decor"',
+            'Or "modern kitchen with marble countertops"'
+        ];
+        let hintIndex = 0;
+        function showSuggestions(val) {
+            const dropdown = document.getElementById('suggestDropdown');
+            const input = val.trim().toLowerCase();
+            let suggestions = [];
+            if (input.length > 0) {
+                suggestions = samplePrompts.filter(p => p.toLowerCase().includes(input));
+            } else {
+                suggestions = samplePrompts.slice(0, 4);
+            }
+            let html = '';
+            suggestions.forEach((s, i) => {
+                html += `<div class='suggest-item' onclick='selectSuggestion("${s.replace(/"/g, '&quot;')}")'>${s}</div>`;
+            });
+            // Animated hint
+            if (animatedHints.length > 0) {
+                html += `<div class='suggest-item suggest-hint'>${animatedHints[hintIndex]}</div>`;
+            }
+            dropdown.innerHTML = html;
+            dropdown.style.display = suggestions.length > 0 || animatedHints.length > 0 ? 'block' : 'none';
+            // Animate hint cycling
+            if (animatedHints.length > 0) {
+                clearTimeout(window.hintTimeout);
+                window.hintTimeout = setTimeout(() => {
+                    hintIndex = (hintIndex + 1) % animatedHints.length;
+                    showSuggestions(val);
+                }, 2500);
+            }
         }
-        function hideLoading() {
+        function hideSuggestions() {
+            document.getElementById('suggestDropdown').style.display = 'none';
+            clearTimeout(window.hintTimeout);
+        }
+        function selectSuggestion(val) {
+            document.getElementById('prompt').value = val;
+            hideSuggestions();
+            document.getElementById('prompt').focus();
+        }
+        // Loading spinner logic (show/hide)
+        const form = document.getElementById('generateForm');
+        if (form) {
+            form.addEventListener('submit', function() {
+                document.getElementById('loadingSpinner').style.display = 'block';
+                document.getElementById('generateBtn').disabled = true;
+            });
+        }
+        // Hide spinner on page load (in case of back nav)
+        window.addEventListener('DOMContentLoaded', () => {
             document.getElementById('loadingSpinner').style.display = 'none';
             document.getElementById('generateBtn').disabled = false;
+            // If result section exists, scroll it into view
+            const resultSection = document.querySelector('.result-section');
+            if (resultSection) {
+                setTimeout(() => {
+                    resultSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 300);
+            }
+        });
+        // History logic (session only)
+        let history = [];
+        function addToHistory(imageUrl, prompt) {
+            history.unshift({ image: imageUrl, prompt: prompt });
+            if (history.length > 12) history = history.slice(0, 12);
+            renderHistory();
         }
-        function showError(message) {
-            const errorDiv = document.getElementById('errorMessage');
-            errorDiv.innerHTML = `<i class="bi bi-exclamation-triangle"></i> ${message}`;
-            errorDiv.style.display = 'block';
-        }
-        function showSuccess(message) {
-            const successDiv = document.getElementById('successMessage');
-            successDiv.innerHTML = `<i class="bi bi-check-circle"></i> ${message}`;
-            successDiv.style.display = 'block';
-        }
-        function displayImage(base64Image, prompt) {
-            const resultSection = document.getElementById('resultSection');
-            const imageContainer = document.getElementById('imageContainer');
-            imageContainer.innerHTML = `
-                <div class="text-center">
-                    <img id="generatedImage" src="data:image/jpeg;base64,${base64Image}" alt="Generated room design" class="generated-image img-fluid">
-                    <div class="image-caption">
-                        <h6><i class="bi bi-chat-quote"></i> Prompt:</h6>
-                        <p class="mb-0">"${prompt}"</p>
-                    </div>
-                    <a id="downloadBtn" href="data:image/jpeg;base64,${base64Image}" download="room_design.jpg" class="btn btn-success mt-3"><i class="bi bi-download"></i> Download Image</a>
-                </div>
-            `;
-            resultSection.style.display = 'block';
-            resultSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            addToHistory(base64Image, prompt);
-        }
-
-        // --- Recent Images (History) ---
-        let recentImages = [];
-        function addToHistory(base64Image, prompt) {
-            // Add to front, keep max 5
-            recentImages.unshift({ image: base64Image, prompt: prompt });
-            if (recentImages.length > 5) recentImages = recentImages.slice(0, 5);
-            renderRecentImages();
-        }
-        function renderRecentImages() {
-            const section = document.getElementById('recentImagesSection');
-            const container = document.getElementById('recentImages');
-            if (recentImages.length === 0) {
-                section.style.display = 'none';
+        function renderHistory() {
+            const gallery = document.getElementById('historyGallery');
+            if (!gallery) return;
+            if (history.length === 0) {
+                gallery.innerHTML = '<div style="color:var(--gray);opacity:0.7;">No designs yet. Generate a room to see it here!</div>';
                 return;
             }
-            section.style.display = 'block';
-            container.innerHTML = recentImages.map((item, idx) => `
-                <div class="position-relative d-inline-block" style="width:60px;height:60px;">
-                    <img src="data:image/jpeg;base64,${item.image}" alt="History ${idx+1}" title="${item.prompt.replace(/"/g, '&quot;')}" class="rounded border" style="width:60px;height:60px;object-fit:cover;cursor:pointer;" onclick="showFromHistory(${idx})">
-                    <button type="button" class="btn btn-sm btn-light position-absolute top-0 end-0 p-1" style="z-index:2;" title="Delete" onclick="deleteFromHistory(event,${idx})"><i class="bi bi-trash text-danger"></i></button>
+            gallery.innerHTML = history.map((item, idx) => `
+                <div class='history-card'>
+                    <img src='${item.image}' alt='Room Design ${idx+1}' />
+                    <div class='history-prompt'>${item.prompt}</div>
+                    <div class='history-actions'>
+                        <button class='history-btn' title='Regenerate' onclick='regenerateFromHistory(${idx})'><i class='bi bi-arrow-repeat'></i></button>
+                        <a class='history-btn' title='Download' href='${item.image}' download='room_design_${idx+1}.png'><i class='bi bi-download'></i></a>
+                        <button class='history-btn' title='Delete' onclick='deleteFromHistory(${idx})'><i class='bi bi-trash'></i></button>
+                    </div>
                 </div>
             `).join('');
         }
-        function showFromHistory(idx) {
-            const item = recentImages[idx];
-            if (item) displayImage(item.image, item.prompt);
+        function deleteFromHistory(idx) {
+            history.splice(idx, 1);
+            renderHistory();
         }
-        function deleteFromHistory(e, idx) {
-            e.stopPropagation();
-            recentImages.splice(idx, 1);
-            renderRecentImages();
+        function regenerateFromHistory(idx) {
+            if (history[idx]) {
+                document.getElementById('prompt').value = history[idx].prompt;
+                document.getElementById('prompt').focus();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
         }
-
-        document.getElementById('generateForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            const prompt = document.getElementById('prompt').value.trim();
-            if (!prompt) {
-                showError('Please enter a room description.');
-                return;
+        // Add to history after generation (if image is present)
+        window.addEventListener('DOMContentLoaded', () => {
+            // ... existing scroll to result ...
+            const img = document.getElementById('generatedImage');
+            const prompt = document.getElementById('prompt') ? document.getElementById('prompt').value : '';
+            if (img && img.src && prompt && !history.some(h => h.image === img.src)) {
+                addToHistory(img.src, prompt);
             }
-            showLoading();
-            try {
-                const response = await fetch('/generate/', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ prompt: prompt })
-                });
-                const data = await response.json();
-                if (data.success) {
-                    displayImage(data.image, data.prompt);
-                    showSuccess('Room design generated successfully!');
-                } else {
-                    // Handle specific error codes
-                    let errorMessage = data.error || 'Failed to generate image. Please try again.';
-                    if (response.status === 401) {
-                        errorMessage = 'Authentication required. Please check your API token.';
-                    } else if (response.status === 403) {
-                        errorMessage = 'Access forbidden. Please check your API permissions.';
-                    } else if (response.status === 404) {
-                        errorMessage = 'API endpoint not found. Please check the configuration.';
-                    } else if (response.status === 429) {
-                        errorMessage = 'Rate limit exceeded. Please try again later.';
-                    } else if (response.status >= 500) {
-                        errorMessage = 'Server error. Please try again later.';
-                    }
-                    showError(errorMessage);
-                }
-            } catch (error) {
-                showError('Network error. Please check your connection and try again.');
-            } finally {
-                hideLoading();
-            }
+            renderHistory();
         });
     </script>
 </body>

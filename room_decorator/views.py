@@ -9,6 +9,7 @@ from django.views.decorators.http import require_http_methods
 from dotenv import load_dotenv
 from PIL import Image, ImageDraw, ImageFont
 import io
+from django.conf import settings
 
 # Load environment variables from .env file
 load_dotenv()
@@ -178,3 +179,22 @@ def generate_image(request):
             'success': False,
             'error': f'Unexpected error: {str(e)}'
         }, status=500) 
+
+def generate_image(request):
+    image_url = None
+    error = None
+    if request.method == 'POST':
+        prompt = request.POST.get('prompt')
+        if prompt:
+            api_url = "https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-xl-base-1.0"
+            headers = {"Authorization": f"Bearer {settings.HUGGINGFACE_API_KEY}"}
+            payload = {"inputs": prompt}
+            response = requests.post(api_url, headers=headers, json=payload)
+            if response.status_code == 200:
+                # The API returns the image as bytes
+                import base64
+                img_b64 = base64.b64encode(response.content).decode('utf-8')
+                image_url = f"data:image/png;base64,{img_b64}"
+            else:
+                error = f"Error: {response.status_code} - {response.text}"
+    return render(request, 'room_decorator/home.html', {'image_url': image_url, 'error': error}) 
