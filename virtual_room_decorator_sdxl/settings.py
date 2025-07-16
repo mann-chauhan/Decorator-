@@ -18,7 +18,7 @@ SECRET_KEY = '++!c*##(8s6!5-s0vuwiusxhao==t_=n&4q6znbx9#)_dsm^9z'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'virtual-room-decorator-sdxl-1.onrender.com']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'decorator-1.onrender.com']
 
 
 # Application definition
